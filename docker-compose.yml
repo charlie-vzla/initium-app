@@ -1,0 +1,60 @@
+version: "3.7"
+
+services:
+  initium-db:
+    image: initium_db:pg
+    build:
+      context: .
+      dockerfile: Dockerfile-pg
+    volumes:
+      - app-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: "u_initium"
+      POSTGRES_DB: "initium_db"
+      POSTGRES_PASSWORD: "u_initium01*.,"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U u_initium -d initium_db"]
+      interval: 1m
+      timeout: 5s
+      retries: 5
+  initium-api:
+    image: node:lts-alpine
+    depends_on:
+      initium-db:
+        condition: service_healthy
+    command: npm start
+    working_dir: /usr/src/app
+    volumes:
+      - ./api:/usr/src/app
+    ports:
+      - 9021:9021
+    environment:
+      LOG_LEVEL: debug
+      PGHOST: initium-db
+      PGUSER: u_initium
+      PGPASSWORD: u_initium01*.,
+      PGPORT: 5432
+  initium-webapp:
+    image: initium:angular
+    build:
+      context: .
+      dockerfile: Dockerfile-angular
+    depends_on:
+      - initium-api
+    command: sh -c "cd initium-app && npm start"
+    working_dir: /home/angular
+    volumes:
+      - ./app:/home/angular
+    ports:
+      - 9022:9022
+    healthcheck:
+      test: curl --fail http://localhost:9022 || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+
+volumes:
+  app-data:

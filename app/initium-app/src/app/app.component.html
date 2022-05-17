@@ -1,0 +1,48 @@
+<!-- Toolbar -->
+<div class="toolbar" role="banner">
+  <img
+    width="40"
+    alt="Angular Logo"
+    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="
+  />
+</div>
+
+<div class="content" role="main">
+  <div class="form-content">
+    <form class="example-form">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Id</mat-label>
+        <input matInput type="text" readonly="true" [formControl]="idFormControl" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="idFormControl.hasError('required')">
+          Id is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" [formControl]="nameFormControl" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="nameFormControl.hasError('required')">
+          Name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="addToQueue()">Take a ticket</button>
+    </form>
+  </div>
+
+  <div class="queues">
+    <div id="queueA">
+      <span>QueueA</span>
+      <mat-chip-list aria-label="List of clients in queue one">
+        <mat-chip *ngFor="let customer of queueA">{{customer.name}}</mat-chip>
+      </mat-chip-list>
+    </div>
+
+    <div id="queueB">
+      <span>QueueB </span>
+      <mat-chip-list aria-label="List of clients in queue one">
+        <mat-chip *ngFor="let customer of queueB">{{customer.name}}</mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+</div>

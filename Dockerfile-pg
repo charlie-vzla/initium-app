@@ -1,0 +1,35 @@
+FROM postgres:14
+
+ARG PRODUCT_NAME=cabreu/initium
+ARG SERVICE_NAME=postgresql
+ARG VERSION=${VERSION:-1.0.0}
+ARG MAINTAINER=${MAINTAINER:-cabreu}
+ARG POSTGRES_DB=${POSTGRES_DB:-postgres}
+ARG TZ=${TZ:-UTC}
+
+LABEL maintainer="${MAINTAINER}" \
+        org.opencontainers.image.authors="${MAINTAINER}" \
+        org.opencontainers.image.version="${VERSION}" \
+        org.opencontainers.image.title="${PRODUCT_NAME}-${SERVICE_NAME}" \
+        org.opencontainers.image.description="Docker for ${PRODUCT_NAME} ${SERVICE_NAME}"
+
+ENV POSTGRES_VERSION 14
+ENV PG_CRON_VERSION=1.4.1
+ENV POSTGRES_PORT=${POSTGRES_PORT:-5432}
+
+RUN apt-get update\
+      && apt-get install -y \
+      postgresql-server-dev-$POSTGRES_VERSION \
+      postgresql-${POSTGRES_VERSION}-cron
+
+# clean
+RUN apt remove -y postgresql-server-dev-$POSTGRES_VERSION \
+      && apt-get clean
+
+RUN mkdir -p /docker-entrypoint-initdb.d
+COPY database/scripts/001-pg-cron.sh /docker-entrypoint-initdb.d/001-pg-cron.sh
+COPY database/scripts/002-pg-cron.sql /docker-entrypoint-initdb.d/002-pg-cron.sql
+COPY database/scripts/003-structure.sql /docker-entrypoint-initdb.d/003-structure.sql
+
+EXPOSE ${POSTGRES_PORT}
+WORKDIR /home/$USER
