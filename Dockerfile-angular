@@ -22,9 +22,7 @@ RUN  apk update && \
 
 WORKDIR /home
 
-RUN adduser -D ${DOCKER_USER}
-
-USER ${DOCKER_USER}
+USER root
 
 ENV CHROME_BIN=/usr/bin/chromium-browser \
     CHROME_PATH=/usr/lib/chromium/

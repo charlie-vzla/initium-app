@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node server.js",
+    "start": "npm install && node server.js",
     "test": "npx jest tests"
   },
   "dependencies": {

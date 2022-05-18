@@ -8,9 +8,12 @@ Application to handle queue of clients, in one queue each client last for 2 mins
 ## Run
 
 ```bash
-    docker-compose up -d
+    docker-compose up -d --build
 ```
 `Wait for initium-webapp to be healthy or check localhost:9022 to start using the app`
 
 ## Stop
 To stop the app without removing the volume: `docker-compose down`, to remove the volume add `--volumes`
+
+## Troubleshooting
+  If initium-webapp is not showing when doing `docker ps` remove package-lock and start de compose again.
